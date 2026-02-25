@@ -1,4 +1,4 @@
-// app/notes/filter/@sidebar/default.tsx
+
 import Link from "next/link";
 import css from "./SidebarNotes.module.css"
 
@@ -7,7 +7,7 @@ const NotesSidebar = async () => {
   return (  
   <ul className={css.menuList}>
          <li className={css.menuItem}>
-              <Link href={`/notes/filter/all`} className={css.menuLink}>All notes</Link>
+              <Link href={`/notes/filter/All`} className={css.menuLink}>All notes</Link>
           </li>
         {tags.map(tag => {
           return (
