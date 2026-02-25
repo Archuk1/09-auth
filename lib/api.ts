@@ -9,6 +9,7 @@ interface FetchNotesParams {
     search: string,
     page: number,
     perPage?: number,
+    tag?: string
 }
 
 interface FetchNotesResponse{
@@ -17,12 +18,13 @@ interface FetchNotesResponse{
 }
 
 
-export async function fetchNotes({search = '',page= 1,perPage = 12}: FetchNotesParams): Promise<FetchNotesResponse> {
+export async function fetchNotes({search = '',page= 1,perPage = 12, tag}: FetchNotesParams): Promise<FetchNotesResponse> {
     const response = await axios.get<FetchNotesResponse>('/notes', {
         params:{
             search: search,
             page: page,
-            perPage: perPage
+            perPage: perPage,
+            tag
         }
     })
     return response.data;
@@ -50,3 +52,6 @@ export async function fetchNoteById (noteId: string) {
     const response = await axios.get<Note>(`/notes/${noteId}`);
     return response.data
 }
+
+
+
