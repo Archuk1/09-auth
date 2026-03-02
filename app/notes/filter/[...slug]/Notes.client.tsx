@@ -4,21 +4,17 @@ import { useState } from "react";
 import css from "./NotesPage.module.css"
 import { fetchNotes } from "@/lib/api";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import Modal from "@/components/Modal/Modal";
-import NoteForm from "@/components/NoteForm/NoteForm";
 import NoteList from "@/components/NoteList/NoteList";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import Pagination from "@/components/Pagination/Pagination";
 import { useDebouncedCallback } from "use-debounce";
+import Link from "next/link";
 
 interface NotesProps{
     tag: string | undefined
 }
 export default function Notes({tag}:NotesProps) {
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +25,7 @@ export default function Notes({tag}:NotesProps) {
     setSearchQuery(value);
     }, 500);
 
-  const { data, isSuccess, refetch } = useQuery({
+  const { data, isSuccess } = useQuery({
     queryKey: ["notes", searchQuery, currentPage, tag],
     queryFn: () => fetchNotes({ search: searchQuery, page: currentPage, tag }),
     placeholderData: keepPreviousData,
@@ -44,10 +40,6 @@ export default function Notes({tag}:NotesProps) {
     setCurrentPage(selectedPage);
   }
 
-  const handleCreateSuccess = () => {
-    closeModal();
-    refetch();
-  };
  
 
   return (
@@ -55,7 +47,7 @@ export default function Notes({tag}:NotesProps) {
       <header className={css.toolbar}>
         <SearchBox onSearch={debouncedSetSearchQuery} />
         {totalPages > 1 && <Pagination pages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />}
-        <button className={css.button} onClick={openModal}>Create note +</button>
+            <Link href="/notes/action/create"  className={css.button}>Create note +</Link>
       </header>
       {isSuccess && (
         <>
@@ -71,11 +63,6 @@ export default function Notes({tag}:NotesProps) {
             </div>
           )}
         </>
-      )}
-      {isModalOpen && (
-        <Modal onClose={closeModal}>
-          <NoteForm onSuccess={handleCreateSuccess} onCancel={closeModal}/>
-        </Modal>
       )}
     </div>
   );

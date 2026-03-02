@@ -1,32 +1,35 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik'
 import css from './NoteForm.module.css'
-import * as Yup from "yup";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '@/lib/api';
 import type { NoteTag } from '../../types/note';
+import { useRouter } from 'next/router';
+import { useNoteDraftStore } from '@/lib/store/noteStore';
 
 interface FormValues {
   title: string;
   content: string;
   tag: "" | NoteTag
 }
+ 
 
-const initialValues: FormValues = {
-  title: "",
-  content: "",
-  tag: "" 
-};
+export default function NoteForm (){
 
-interface NoteFormProps {
-    onSuccess: () => void,
-    onCancel: () => void
-}
-export default function NoteForm ({onSuccess, onCancel}: NoteFormProps ){
-const NoteFormSchema = Yup.object().shape({
-  title: Yup.string().min(3).max(50).required("Title is required"),
-  content: Yup.string().max(500),
-  tag: Yup.string().required("Please select a tag").oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"], "Invalid tag selected"),
-});
+    const router = useRouter()
+    const {draft, setDraft, clearDraft} = useNoteDraftStore();
+
+
+
+    const handleChange = (
+      event: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >,
+    ) => {
+      setDraft({
+        [event.target.name]: event.target.value,
+      });
+    };
+
+
     const queryClient = useQueryClient();
 
      const { mutate, isPending } = useMutation({
@@ -37,48 +40,54 @@ const NoteFormSchema = Yup.object().shape({
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
-      onSuccess();
+      clearDraft();
+      router.push("/notes/filter/All")
     },
   });
 
+    const handlSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutate(draft)
+   }
 
+   const handlCancel = () => {
+    router.push("/notes/filter/All")
+   }
 
     return(
-        <Formik initialValues={initialValues} onSubmit={(values: FormValues) => mutate(values)} validationSchema={NoteFormSchema}>
-            <Form className={css.form}>
+       
+            <form className={css.form} onSubmit={handlSubmit}>
         <div className={css.formGroup}>
             <label htmlFor="title">Title</label>
-            <Field id="title" type="text" name="title" className={css.input} />
-             <ErrorMessage name="title" component="span" className={css.error} />
+            <input id="title" type="text" name="title" className={css.input} defaultValue={draft?.title} onChange={handleChange}/>
         </div>
 
         <div className={css.formGroup}>
             <label htmlFor="content">Content</label>
-            <Field
-            as="textarea"
+            <textarea
             id="content"
             name="content"
             rows={8}
             className={css.textarea}
+            defaultValue={draft?.content}
+            onChange={handleChange}
             />
-            <ErrorMessage name="content" component="span" className={css.error} />
         </div>
 
         <div className={css.formGroup}>
             <label htmlFor="tag">Tag</label>
-            <Field as="select" id="tag" name="tag" className={css.select}>
+            <select id="tag" name="tag" className={css.select} defaultValue={draft?.tag} onChange={handleChange}>
             <option value="">Select a tag</option>
             <option value="Todo">Todo</option>
             <option value="Work">Work</option>
             <option value="Personal">Personal</option>
             <option value="Meeting">Meeting</option>
             <option value="Shopping">Shopping</option>
-            </Field>
-            <ErrorMessage name="tag" component="span" className={css.error} />
+            </select>
         </div>
 
         <div className={css.actions}>
-            <button type="button" className={css.cancelButton} onClick={onCancel}>
+            <button type="button" className={css.cancelButton} onClick={handlCancel}>
             Cancel
             </button>
             <button
@@ -89,9 +98,6 @@ const NoteFormSchema = Yup.object().shape({
             Create note
             </button>
         </div>
-        </Form>
-
-        </Formik>
-        
+        </form>     
     )
 }
