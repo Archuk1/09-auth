@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import css from './ProfilePage.module.css'
 import { Metadata } from 'next';
-import { getMe } from '@/lib/api/serverApi';
+import { getCurrentUser } from '@/lib/api/serverApi';
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default async function Profile() {
 
-  const user = await getMe();
+  const user = await getCurrentUser();
 
   return (
     <main className={css.mainContent}>
@@ -39,7 +39,7 @@ export default async function Profile() {
 
         <div className={css.avatarWrapper}>
           <Image
-            src={user.avatar || 'Avatar'} 
+            src={user.avatar || '/public/next.svg'} 
             alt={`Avatar`}
             width={120}
             height={120}
