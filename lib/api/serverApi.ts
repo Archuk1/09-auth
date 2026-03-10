@@ -28,6 +28,8 @@ export const checkServerSession = async () => {
 };
 
 export async function fetchNotes({search = '',page= 1,perPage = 12, tag}: FetchNotesParams): Promise<FetchNotesResponse> {
+    const cookieStore = cookies();
+    
     const response = await api.get<FetchNotesResponse>('/notes', {
         params:{
             search: search,
@@ -44,6 +46,8 @@ export async function fetchNotes({search = '',page= 1,perPage = 12, tag}: FetchN
 }
 
 export async function fetchNoteById (noteId: string) {
+    const cookieStore = cookies();
+
     const response = await api.get<Note>(`/notes/${noteId}`,{
         headers: {
       Cookie: cookieStore.toString(),
@@ -58,6 +62,8 @@ type CheckSessionRequest = {
 };
 
 export const checkSession = async () => {
+  const cookieStore = cookies();
+
   const res = await api.get<CheckSessionRequest>("/auth/session",{
     headers: {
       Cookie: cookieStore.toString(),
@@ -68,6 +74,8 @@ export const checkSession = async () => {
 };
 
 export const getMe = async () => {
+  const cookieStore = cookies();
+
   const { data } = await api.get<User>("/users/me",{
     headers: {
       Cookie: cookieStore.toString(),
