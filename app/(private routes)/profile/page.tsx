@@ -1,15 +1,17 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import css from './ProfilePage.module.css'
-import { Metadata } from 'next';
-import { getCurrentUser } from '@/lib/api/serverApi';
+import Link from "next/link";
+import Image from "next/image";
+import css from "./ProfilePage.module.css";
+import { Metadata } from "next";
+import { getCurrentUser } from "@/lib/api/serverApi";
 
 export const metadata: Metadata = {
   title: "Profile",
-  description: "Manage your personal profile, view account information, and customize your settings in the Notes App.",
+  description:
+    "Manage your personal profile, view account information, and customize your settings in the Notes App.",
   openGraph: {
     title: "Profile",
-    description: "Access your profile, manage your account details, and personalize your experience in the Notes App.",
+    description:
+      "Access your profile, manage your account details, and personalize your experience in the Notes App.",
     url: "/profile",
     images: [
       {
@@ -22,9 +24,7 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default async function Profile() {
-
   const user = await getCurrentUser();
 
   return (
@@ -39,8 +39,8 @@ export default async function Profile() {
 
         <div className={css.avatarWrapper}>
           <Image
-            src={user.avatar || '/public/next.svg'} 
-            alt={`Avatar`}
+            src={user.avatar || "/next.svg"} 
+            alt={`Avatar of ${user.username}`}
             width={120}
             height={120}
             className={css.avatar}
@@ -53,5 +53,5 @@ export default async function Profile() {
         </div>
       </div>
     </main>
-  )
+  );
 }
