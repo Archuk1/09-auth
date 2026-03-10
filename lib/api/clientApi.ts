@@ -1,6 +1,6 @@
 import { Note, NoteTag } from "@/types/note";
 import { api } from "./api";
-import { User } from "@/types/users";
+import { User } from "@/types/user";
 
 interface FetchNotesParams {
     search: string,

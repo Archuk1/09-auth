@@ -1,4 +1,4 @@
-import { User } from "@/types/users";
+import { User } from "@/types/user";
 import { create } from "zustand";
 
 
