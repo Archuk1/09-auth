@@ -3,19 +3,21 @@ import { useRouter } from 'next/navigation'
 import css from './SingInPage.module.css'
 import { useState } from 'react';
 import { login, LoginRequest } from '@/lib/api/clientApi';
+import { useAuthStore } from '@/lib/store/authStore';
 
 
 
 export default function SignIn(){
     const router = useRouter();
     const [error, setError] = useState('');
-
+    const {setUser} = useAuthStore();
     const handleSubmit = async (formData: FormData) => { 
      try {
       const formValues = Object.fromEntries(formData) as LoginRequest;
       const res = await login(formValues);
 
       if (res) {
+        setUser(res)
         router.push('/profile');
       }
     } catch {
