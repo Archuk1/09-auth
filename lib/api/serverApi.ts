@@ -26,8 +26,7 @@ export const checkServerSession = async () => {
     },
   });
 
-  // повертаємо Set-Cookie хедери з відповіді
-  return res.headers["set-cookie"];
+  return res; 
 };
 
 
