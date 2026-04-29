@@ -38,7 +38,7 @@ const AuthProvider = ({ children }: Props) => {
           } else {
             clearIsAuthenticated();
             if (isPrivateRoute(pathname)) {
-              router.push("/sing-in");
+              router.push("/notes");
             }
           }
         } else {
@@ -51,7 +51,7 @@ const AuthProvider = ({ children }: Props) => {
         console.error("Session verification failed:", error);
         clearIsAuthenticated();
         if (isPrivateRoute(pathname)) {
-          router.push("/sign-in");
+          router.push("/notes");
         }
       } finally {
         setIsLoading(false);
