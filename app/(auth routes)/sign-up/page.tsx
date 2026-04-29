@@ -1,5 +1,5 @@
 'use client'
-import { register, RegisterRequest } from '@/lib/api/clientApi';
+import { getMe, register, RegisterRequest } from '@/lib/api/clientApi';
  import css from './SingUpPage.module.css'
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -16,7 +16,8 @@ export default function SignUp () {
       const res = await register(formValues);
 
       if (res) {
-        setUser(res)
+         const user = await getMe();
+        setUser(user)
         router.push('/profile');
       }
     } catch {
