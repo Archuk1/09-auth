@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useAuthStore } from "@/lib/store/authStore";
 import css from "./Header.module.css";
 import Link from "next/link";
@@ -44,9 +44,13 @@ export default function Header() {
                 </Link>
               </li>
               <li>
-                <button className={css.headerLink} onClick={handleLogout}>
+                <Link
+                  className={css.headerLink}
+                  href="/sign-in"
+                  onClick={handleLogout}
+                >
                   Logout
-                </button>
+                </Link>
               </li>
             </>
           ) : (
