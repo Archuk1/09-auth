@@ -1,11 +1,23 @@
-// components/Header/Header.tsx
 'use client'
 import { useAuthStore } from "@/lib/store/authStore";
 import css from "./Header.module.css";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { logout } from "@/lib/api/clientApi";
 
 export default function Header() {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, clearIsAuthenticated } = useAuthStore();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      clearIsAuthenticated();
+      router.push("/sign-in");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <header className={css.header}>
@@ -30,6 +42,11 @@ export default function Header() {
                 <Link className={css.headerLink} href="/profile">
                   Profile
                 </Link>
+              </li>
+              <li>
+                <button className={css.headerLink} onClick={handleLogout}>
+                  Logout
+                </button>
               </li>
             </>
           ) : (
