@@ -55,7 +55,7 @@ export type RegisterRequest = {
 };
 
 export const register = async (data: RegisterRequest) => {
-  const res = await nextServer.post<User>("/auth/register", data);
+  const res = await nextServer.post<User>("/api/auth/register", data);
   return res.data;
 };
 
@@ -65,17 +65,17 @@ export type LoginRequest = {
 };
 
 export const login = async (data: LoginRequest) => {
-  const res = await nextServer.post<User>("/auth/login", data);
+  const res = await nextServer.post<User>("/api/auth/login", data);
   return res.data;
 };
 
 export const logout = async (): Promise<void> => {
-  await nextServer.post("/auth/logout");
+  await nextServer.post("/api/auth/logout");
 };
 
 
 export const checkSession = async () => {
-  const res = await nextServer.get("/auth/session");
+  const res = await nextServer.get("/api/auth/session");
   return res.data;
 };
 
